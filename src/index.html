@@ -1,0 +1,297 @@
+<!doctype html>
+<html>
+  <head>
+    <style>
+      div {
+        border: 1px solid #aaa;
+        display: block;
+        margin: 10px;
+        padding: 10px;
+      }
+    .cd-dynamic-select {
+      width: 100%;
+      position: relative;
+      background-color: transparent;
+    }
+    .cd-dynamic-select:focus > .cd-head {
+      border-color: #5d9cec;
+    }
+    .cd-dynamic-select .btn-not-style {
+      background-color: transparent;
+      border: 0;
+    }
+    .cd-dynamic-select .noselect {
+      webkit-touch-callout: none;
+      -webkit-user-select: none;
+      -khtml-user-select: none;
+      -moz-user-select: none;
+      -ms-user-select: none;
+      user-select: none;
+    }
+    .cd-dynamic-select > .cd-head {
+      display: table;
+      line-height: 1.2;
+      height: auto;
+      min-height: 32px;
+      padding: 0 2px;
+    }
+    .cd-dynamic-select > .cd-head.form-control:focus {
+      border-color: #eaeaea;
+    }
+    .cd-dynamic-select > .cd-head > .cd-single,
+    .cd-dynamic-select > .cd-head > .cd-multiple {
+      display: table-cell;
+      width: 100%;
+      padding: 0 0 0 0;
+    }
+    .cd-dynamic-select > .cd-head > .cd-single .cd-selected-text {
+      float: left;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+      overflow: hidden;
+      padding-right: 10px;
+      text-align: start;
+      word-break: break-word;
+      padding: 6px 10px;
+    }
+    .cd-dynamic-select > .cd-head > .cd-single .cd-selected-text.cd-placeholder {
+      color: #9C9F9F;
+    }
+    .cd-dynamic-select > .cd-head > .cd-single .cd-selected-text span {
+      white-space: normal;
+      overflow: hidden;
+      -moz-user-select: text;
+      -webkit-user-select: text;
+      -ms-user-select: text;
+    }
+    .cd-dynamic-select > .cd-head > .cd-multiple > .cd-placeholder {
+      float: left;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+      overflow: hidden;
+      padding-top: 7px;
+      padding-left: 10px;
+      padding-right: 0px;
+      text-align: justify;
+      color: #9C9F9F;
+    }
+    @media (max-width: 1500px) {
+      .cd-dynamic-select > .cd-head > .cd-multiple > .cd-placeholder {
+        width: 170px;
+        padding-right: 9px;
+      }
+    }
+    .cd-dynamic-select > .cd-head > .cd-multiple > .cd-tag {
+      float: left;
+      font: 14px "Helvetica Neue", Helvetica, Arial, sans-serif;
+      height: 26px;
+      line-height: 28px;
+      border: 1px solid #e6e6e6;
+      border-radius: 2px;
+      border-image: none;
+      border: 0;
+      -webkit-border-radius: 2px;
+      -moz-border-radius: 2px;
+      -ms-border-radius: 2px;
+      background-color: #eaeaea;
+      color: #656565;
+      display: table;
+      margin-top: 1px;
+      margin-right: 2px;
+      margin-bottom: 1px;
+      padding: 0 3px;
+    }
+    .cd-dynamic-select > .cd-head > .cd-multiple > .cd-tag > div {
+      display: table-cell;
+      padding: 0 3px;
+    }
+    .cd-dynamic-select > .cd-head > .cd-multiple > .cd-tag > div > span.cd-caption {
+      white-space: normal;
+      line-height: 1.3;
+      padding: 5px;
+      overflow: hidden;
+      text-overflow: initial;
+      font-family: "Bpg Arial";
+      max-width: 260px;
+      display: block;
+    }
+    .cd-dynamic-select > .cd-head > .cd-multiple > .cd-tag > div > button.cd-remove {
+      padding: 0;
+      border: none;
+      background: none;
+      cursor: pointer;
+      vertical-align: middle;
+      font: bold 16px Arial, sans-serif;
+      color: inherit;
+      text-decoration: none;
+    }
+    .cd-dynamic-select > .cd-head > .cd-buttons {
+      display: table-cell;
+      z-index: 999;
+      overflow: hidden;
+      height: 100%;
+      padding: 6px 6px 0;
+      background-color: transparent;
+      vertical-align: top;
+    }
+    .cd-dynamic-select > .cd-head > .cd-buttons .cd-button.cd-button-dynamic {
+      float: left;
+      overflow: hidden;
+      display: block;
+      margin-top: -2px;
+      background-color: transparent;
+      border: 0;
+    }
+    .cd-dynamic-select > .cd-head > .cd-buttons .cd-button.cd-button-dynamic span {
+      font-size: 10px;
+      padding: 0;
+      color: #777;
+    }
+    .cd-dynamic-select > .cd-head > .cd-buttons .cd-button.cd-button-dynamic:hover span {
+      color: #333;
+    }
+    .cd-dynamic-select > .cd-head > .cd-buttons .cd-button.cd-button-clear {
+      float: left;
+      overflow: hidden;
+      display: block;
+      padding: 0 9px;
+      background: none;
+      color: #777;
+    }
+    .cd-dynamic-select > .cd-head > .cd-buttons .cd-button.cd-button-clear:hover span {
+      background: none;
+      color: #333;
+    }
+    .cd-dynamic-select > .cd-head > .cd-buttons .cd-button.cd-button-collapse {
+      float: left;
+      overflow: hidden;
+      display: block;
+      background: none;
+      color: #777;
+    }
+    .cd-dynamic-select > .cd-head > .cd-buttons .cd-button.cd-button-collapse:hover span {
+      color: #333;
+    }
+    .cd-dynamic-select > .cd-head > .cd-buttons .cd-button.cd-button-dynamic:empty {
+      display: none;
+    }
+    .cd-dynamic-select fieldset[disabled] .cd-buttons {
+      background-color: #eeeeee !important;
+    }
+    .cd-dynamic-select.cd-expanded > .cd-body {
+      display: block;
+    }
+    .cd-dynamic-select.cd-expanded > .cd-head {
+      overflow: hidden;
+    }
+    .cd-dynamic-select.cd-expanded > .cd-head > .cd-selected-text {
+      float: left;
+    }
+    .cd-dynamic-select.cd-expanded > .cd-head > .cd-buttons > .cd-button.cd-button-collapse {
+      background-position: -18px -4px;
+    }
+    .cd-dynamic-select-body {
+      z-index: 2147483647;
+      display: none;
+      top: 35px;
+      border: 1px solid #eaeaea;
+      border-top: 0;
+      background: #fff;
+      box-shadow: 0 3px 4px rgba(0, 0, 0, 0.12);
+      -webkit-box-shadow: 0 3px 4px rgba(0, 0, 0, 0.12);
+      -moz-box-shadow: 0 3px 4px rgba(0, 0, 0, 0.12);
+      position: absolute;
+      left: 0;
+      margin-top: -3px;
+      border-radius: 0 0 4px 4px;
+      background-clip: padding-box;
+      padding: 3px 4px;
+      width: 100%;
+    }
+    .cd-dynamic-select-body.tether-enabled {
+      width: auto;
+    }
+    .cd-dynamic-select-body.cd-expanded {
+      display: block;
+    }
+    .cd-dynamic-select-body > .cd-search {
+      position: relative;
+      z-index: 1010;
+      margin: 0;
+      white-space: nowrap;
+    }
+    .cd-dynamic-select-body > .cd-search > input {
+      margin: 1px 0;
+      padding: 4px 20px 4px 5px;
+      width: 100%;
+      height: auto;
+      outline: 0;
+      border: 1px solid #aaa;
+      background-image: url(../../../../img/chosen-sprite.png);
+      background-position: 99% -20px;
+      background-repeat: no-repeat;
+      font-size: 1em;
+      font-family: sans-serif;
+      line-height: normal;
+      border-radius: 0;
+    }
+    .cd-dynamic-select-body > .cd-search.cd-searching > input {
+      background-image: url(../../../../img/select-loading.gif);
+      background-size: 28px;
+      background-position: 100% -2px;
+      background-repeat: no-repeat;
+    }
+    .cd-dynamic-select-body > .cd-records {
+      max-height: 240px;
+      padding: 0;
+      margin: 0;
+    }
+    .cd-dynamic-select-body > .cd-records > .cd-record {
+      display: none;
+      margin: 0;
+      padding: 5px 6px 5px 11px;
+      list-style: none;
+      line-height: 15px;
+      word-wrap: break-word;
+      -webkit-touch-callout: none;
+      cursor: pointer;
+      display: list-item;
+    }
+    .cd-dynamic-select-body > .cd-records > .cd-record:hover,
+    .cd-dynamic-select-body > .cd-records > .cd-record:focus {
+      background-color: #a1a2a3;
+      color: #fff;
+      background-image: none;
+    }
+    .cd-dynamic-select-body div > .cd-footer {
+      padding: 2px 4px;
+      text-align: right;
+      text-decoration: underline;
+    }
+    .cd-dynamic-select-body div > .cd-no-records {
+      overflow: hidden;
+    }
+    .cd-dynamic-select-body div > .cd-no-records > .cd-text {
+      float: left;
+      padding: 4px;
+    }
+    .cd-dynamic-select-body div > .cd-no-records > .cd-loading {
+      padding: 4px;
+      float: right;
+    }
+
+    </style>
+    <!-- Latest compiled and minified CSS -->
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js" integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa" crossorigin="anonymous"></script>
+  </head>
+  <body>
+
+    <div id="App"></div>
+
+    <!-- <script src="node_modules/angular/angular.js"></script>
+    <script src="node_modules/react/umd/react.development.js"></script>
+    <script src="node_modules/react-dom/umd/react-dom.development.js"></script> -->
+    <script src="bundle.js"></script>
+  </body>
+</html>
