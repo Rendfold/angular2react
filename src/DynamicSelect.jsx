@@ -1,11 +1,13 @@
 import angular from 'angular'
 import { angular2react } from 'angular2react'
 import { lazyInjector } from './lazyInjector'
+import utils from './utils'
 
 /* global current */
 /* global angular */
 /* global utils */
 /* global Tether */
+
 angular.module('Demo', []).directive('selector', ['$injector', '$q', '$timeout', '$http', function (injector, q, timeout, http) {
   return {
       restrict: 'E',
@@ -504,6 +506,7 @@ angular.module('Demo', []).directive('selector', ['$injector', '$q', '$timeout',
 
               // Select option on enter key
               if (e.which === 13) {
+                  debugger;
                   var focusedRecordScope = bodyElement.find('.cd-records > .cd-record:focus').scope();
                   if (focusedRecordScope) {
                       scope.$apply(function () {
@@ -702,6 +705,96 @@ angular.module('Demo', []).directive('selector', ['$injector', '$q', '$timeout',
   }
 }]);
 
+angular.module('Demo').directive('cdPartial', [
+	'$compile',
+	'$controller',
+	'$http',
+	'$templateCache',
+	'$q',
+	'$state',
+	'$resolve',
+	function (compile, controller, http, templateCache, q, state, resolve) {
+		return {
+			restrict: 'A',
+			link: function (scope, element, attrs) {
+				var resolvePromises,
+					templatePromise,
+					tmplScope,
+					tmplCtrl,
+					resolveFns,
+					attrLocals;
+
+				scope.$watch(attrs[current.name], function (options) {
+					resolvePromises = [];
+					resolveFns = angular.extend({}, options.resolve || {});
+					attrLocals = scope.$eval(attrs[current.name + 'Locals']);
+
+					// extend resolves
+					if (attrLocals) {
+						Object.keys(attrLocals).forEach(function (attrLocalKey) {
+							resolveFns[attrLocalKey] = function () {
+								return attrLocals[attrLocalKey];
+							};
+						});
+					}
+
+					// destroy previous scope
+					if (tmplScope) {
+						tmplScope.$destroy();
+					}
+
+					// load template
+					if(options.templateUrl) {
+						templatePromise = http.get(options.templateUrl, { cache: templateCache }).then(function (result) {
+							return result.data;
+						});
+					} else {
+						templatePromise = q.when(options.template);
+					}
+
+					// resolve promises
+					resolve.resolve(resolveFns, state.$current.locals.globals).then(function (locals) {
+						return templatePromise.then(function (template) {
+							return {
+								locals: angular.extend({}, locals, attrLocals),
+								template: template
+							};
+						});
+					}).then(function (data) {
+						init(data, options)
+					}, function (err) {
+						console.error('Resolve failed', err);
+					});
+				});
+
+				// init controller
+				function init(data, options) {
+					// create child scope
+					tmplScope = scope.$new();
+
+					// add content
+					element.html(data.template);
+
+					// assign controller if available
+					if (options.controller) {
+						tmplCtrl = controller(options.controller, angular.extend({ $scope: tmplScope }, data.locals));
+						element.children().data('$ngControllerController', tmplCtrl);
+					}
+
+					// compile element contents with child scope
+					compile(element.contents())(tmplScope);
+
+					// call on init callback
+					var onInitCallback = attrs[current.name + 'Oninit'];
+					if (onInitCallback) {
+						tmplScope.$eval(onInitCallback);
+					}
+				}
+			}
+		};
+	}
+]);
+
 export let ThreeAngular = {
   bindings: {
     data: '<',
@@ -732,7 +825,7 @@ export let ThreeAngular = {
   template: `
     <div>
       three: {{this.$ctrl.three}}
-      <selector cd-data="getAllSteps"
+      <selector cd-data="this.$ctrl.data"
       name="sendBackStep"
       id="sendBackStep"
       cd-placeholder="უკან გაგზავნის ნაბიჯი"
@@ -742,4 +835,4 @@ export let ThreeAngular = {
   `
 }
 
-export let Three = angular2react('threeAngular', ThreeAngular, lazyInjector.$injector)
+export let DynamicSelect = angular2react('threeAngular', ThreeAngular, lazyInjector.$injector)

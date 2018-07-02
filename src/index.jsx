@@ -13,20 +13,14 @@
 import angular from 'angular'
 import React from 'react'
 import { render } from 'react-dom'
-import { OneAngular, One } from './One'
-import { TwoAngular } from './Two'
-import { ThreeAngular } from './Three'
-import { FourAngular } from './Four'
+import { ThreeAngular, DynamicSelect } from './DynamicSelect'
 import { lazyInjector } from './lazyInjector'
 
 // Expose components to Angular
 
 angular
   .module('Demo')
-  .component('oneAngular', OneAngular)
-  .component('twoAngular', TwoAngular)
   .component('threeAngular', ThreeAngular)
-  .component('fourAngular', FourAngular)
   .run(['$injector', function (_$injector) {
     lazyInjector.$injector = _$injector
     reactBootstrap()
@@ -35,5 +29,5 @@ angular
 angular.bootstrap(document.createElement('div'), ['Demo'])
 
 function reactBootstrap () {
-  render(<One />, document.querySelector('#App'))
+  render(<DynamicSelect data={ [{id: 1, name: 'a'}, {id: 2, name: 'a'}] } />, document.querySelector('#App'))
 }
