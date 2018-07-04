@@ -2,13 +2,14 @@ import angular from 'angular'
 import { angular2react } from 'angular2react'
 import { lazyInjector } from './lazyInjector'
 import utils from './utils'
-
+import angularUIBootstrap from 'angular-ui-bootstrap'
+import angularUIRouter from 'angular-ui-router'
 /* global current */
 /* global angular */
 /* global utils */
 /* global Tether */
 
-angular.module('Demo', []).directive('selector', ['$injector', '$q', '$timeout', '$http', function (injector, q, timeout, http) {
+angular.module('Demo', [angularUIBootstrap, angularUIRouter]).directive('selector', ['$injector', '$q', '$timeout', '$http', function (injector, q, timeout, http) {
   return {
       restrict: 'E',
       template: `<div class="cd-dynamic-select" ng-class="expanded ? 'cd-expanded' : null">
@@ -193,8 +194,10 @@ angular.module('Demo', []).directive('selector', ['$injector', '$q', '$timeout',
                   return scope.optionPartial;
               }
 
+              let caption = scope.getOptionCaption(record)
+
               return {
-                  template: '<span ng-bind="::getOptionCaption(record)"></span>'
+                  template: '<span ng-bind="caption"></span>'
               };
           };
 
